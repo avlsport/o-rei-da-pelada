@@ -38,12 +38,15 @@ def criar_partida(pelada_id):
         
         data = request.get_json()
         
-        if not data or not data.get('data') or not data.get('local'):
-            return jsonify({'error': 'Data e local são obrigatórios'}), 400
+        # Validar campos obrigatórios
+        if not data or not data.get('data') or not data.get('local') or not data.get('horario_inicio') or not data.get('horario_fim'):
+            return jsonify({'error': 'Data, local, horário de início e fim são obrigatórios'}), 400
         
         # Criar nova partida
         partida = Partida(
             data=datetime.fromisoformat(data['data']).date(),
+            horario_inicio=datetime.strptime(data['horario_inicio'], '%H:%M').time(),  # NOVO CAMPO
+            horario_fim=datetime.strptime(data['horario_fim'], '%H:%M').time(),        # NOVO CAMPO
             local=data['local'],
             id_criador=jogador.id,
             id_pelada=pelada_id

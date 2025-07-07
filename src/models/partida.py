@@ -6,6 +6,8 @@ class Partida(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.Date, nullable=False)
+    horario_inicio = db.Column(db.Time, nullable=False)  # NOVO CAMPO
+    horario_fim = db.Column(db.Time, nullable=False)     # NOVO CAMPO
     local = db.Column(db.String(200), nullable=False)
     id_criador = db.Column(db.Integer, db.ForeignKey('jogadores.id'), nullable=False)
     id_pelada = db.Column(db.Integer, db.ForeignKey('peladas.id'), nullable=False)
@@ -22,6 +24,8 @@ class Partida(db.Model):
         return {
             'id': self.id,
             'data': self.data.isoformat() if self.data else None,
+            'horario_inicio': self.horario_inicio.strftime('%H:%M') if self.horario_inicio else None,  # NOVO CAMPO
+            'horario_fim': self.horario_fim.strftime('%H:%M') if self.horario_fim else None,           # NOVO CAMPO
             'local': self.local,
             'id_criador': self.id_criador,
             'id_pelada': self.id_pelada,

@@ -41,6 +41,7 @@ def criar_pelada():
         pelada = Pelada(
             nome=data["nome"],
             descricao=data.get("descricao", ""),
+            foto_url=data.get("foto_url"),  # NOVO CAMPO para foto da pelada
             id_criador=jogador.id
         )
         

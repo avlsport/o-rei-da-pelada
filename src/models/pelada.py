@@ -7,6 +7,7 @@ class Pelada(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
     descricao = db.Column(db.Text)
+    foto_url = db.Column(db.String(500))  # NOVO CAMPO para foto da pelada
     id_criador = db.Column(db.Integer, db.ForeignKey('jogadores.id'), nullable=False)
     data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
     ativa = db.Column(db.Boolean, default=True)
@@ -23,6 +24,7 @@ class Pelada(db.Model):
             'id': self.id,
             'nome': self.nome,
             'descricao': self.descricao,
+            'foto_url': self.foto_url,  # NOVO CAMPO
             'id_criador': self.id_criador,
             'data_criacao': self.data_criacao.isoformat() if self.data_criacao else None,
             'ativa': self.ativa
