@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Rei da Pelada</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .tab-button.active {
+            background-color: #667eea;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Loading Screen -->
+    <div id="loading" class="fixed inset-0 gradient-bg flex items-center justify-center z-50">
+        <div class="text-center text-white">
+            <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-white mx-auto mb-4"></div>
+            <h2 class="text-2xl font-bold">Carregando...</h2>
+        </div>
+    </div>
+
+    <!-- Login/Register Screen -->
+    <div id="auth-screen" class="min-h-screen gradient-bg flex items-center justify-center p-4" style="display: none;">
+        <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">⚽ O Rei da Pelada</h1>
+                <p class="text-gray-600">Gerencie suas peladas com facilidade</p>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form">
+                <h2 class="text-2xl font-bold text-center mb-6">Entrar</h2>
+                <form id="loginForm">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                        <input type="email" id="loginEmail" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Senha</label>
+                        <input type="password" id="loginPassword" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200">
+                        Entrar
+                    </button>
+                </form>
+                <p class="text-center mt-4">
+                    Não tem conta? <a href="#" id="showRegister" class="text-blue-500 hover:underline">Cadastre-se</a>
+                </p>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-form" style="display: none;">
+                <h2 class="text-2xl font-bold text-center mb-6">Cadastrar</h2>
+                <form id="registerForm" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Nome</label>
+                        <input type="text" id="registerName" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                        <input type="email" id="registerEmail" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Senha</label>
+                        <input type="password" id="registerPassword" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Posição</label>
+                        <select id="registerPosition" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+                            <option value="">Selecione uma posição</option>
+                            <option value="Goleiro">Goleiro</option>
+                            <option value="Zagueiro">Zagueiro</option>
+                            <option value="Lateral">Lateral</option>
+                            <option value="Volante">Volante</option>
+                            <option value="Meia">Meia</option>
+                            <option value="Atacante">Atacante</option>
+                        </select>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Foto do Perfil</label>
+                        <input type="file" id="registerPhoto" accept="image/*" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+                    </div>
+                    <button type="submit" class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-200">
+                        Cadastrar
+                    </button>
+                </form>
+                <p class="text-center mt-4">
+                    Já tem conta? <a href="#" id="showLogin" class="text-blue-500 hover:underline">Entrar</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-app" style="display: none;">
+        <!-- Navigation -->
+        <nav class="gradient-bg text-white p-4">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-2xl font-bold">⚽ O Rei da Pelada</h1>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <img id="userPhoto" src="" alt="Foto" class="w-8 h-8 rounded-full object-cover" style="display: none;">
+                        <div id="userInitial" class="w-8 h-8 bg-white text-purple-600 rounded-full flex items-center justify-center font-bold"></div>
+                        <span id="userName" class="font-medium"></span>
+                    </div>
+                    <button id="logoutBtn" class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded transition duration-200">
+                        Sair
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="container mx-auto p-4">
+            <!-- Dashboard Principal -->
+            <div id="dashboard-screen">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Dashboard</h2>
+                    <p class="text-gray-600">Bem-vindo ao seu painel de controle</p>
+                </div>
+
+                <!-- Ranking Geral -->
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">🏆 Ranking Geral do Aplicativo</h3>
+                    <div id="ranking-geral">
+                        <div class="text-center py-8">
+                            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+                            <p class="mt-2 text-gray-600">Carregando ranking...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Minhas Peladas -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-2xl font-bold text-gray-800">⚽ Minhas Peladas</h3>
+                        <button id="newPeladaBtn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition duration-200">
+                            <i class="fas fa-plus mr-2"></i>Nova Pelada
+                        </button>
+                    </div>
+                    <div id="peladas-list">
+                        <div class="text-center py-8">
+                            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+                            <p class="mt-2 text-gray-600">Carregando peladas...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard da Pelada -->
+            <div id="pelada-dashboard" style="display: none;">
+                <div class="mb-6">
+                    <button id="backToDashboard" class="text-blue-500 hover:text-blue-700 mb-4">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar ao Dashboard
+                    </button>
+                    <h2 id="peladaTitle" class="text-3xl font-bold text-gray-800"></h2>
+                </div>
+
+                <!-- Tabs -->
+                <div class="bg-white rounded-lg shadow-lg mb-6">
+                    <div class="border-b">
+                        <nav class="flex space-x-8 px-6">
+                            <button class="tab-button py-4 px-2 border-b-2 border-transparent hover:border-gray-300 font-medium text-gray-500 hover:text-gray-700 active" data-tab="rankings">
+                                🏆 Rankings
+                            </button>
+                            <button class="tab-button py-4 px-2 border-b-2 border-transparent hover:border-gray-300 font-medium text-gray-500 hover:text-gray-700" data-tab="partidas">
+                                ⚽ Partidas
+                            </button>
+                            <button class="tab-button py-4 px-2 border-b-2 border-transparent hover:border-gray-300 font-medium text-gray-500 hover:text-gray-700" data-tab="financeiro">
+                                💰 Financeiro
+                            </button>
+                            <button class="tab-button py-4 px-2 border-b-2 border-transparent hover:border-gray-300 font-medium text-gray-500 hover:text-gray-700" data-tab="jogadores">
+                                👥 Jogadores
+                            </button>
+                        </nav>
+                    </div>
+
+                    <!-- Tab Contents -->
+                    <div class="p-6">
+                        <!-- Rankings Tab -->
+                        <div id="rankings-tab" class="tab-content active">
+                            <h3 class="text-xl font-bold mb-4">Rankings da Pelada</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h4 class="font-bold text-lg mb-2">Geral</h4>
+                                    <div id="ranking-geral-pelada">Carregando...</div>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h4 class="font-bold text-lg mb-2">Este Ano</h4>
+                                    <div id="ranking-ano-pelada">Carregando...</div>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h4 class="font-bold text-lg mb-2">Último Mês</h4>
+                                    <div id="ranking-mes-pelada">Carregando...</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Partidas Tab -->
+                        <div id="partidas-tab" class="tab-content">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-xl font-bold">Partidas</h3>
+                                <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                                    <i class="fas fa-plus mr-2"></i>Nova Partida
+                                </button>
+                            </div>
+                            <div id="partidas-list">Carregando partidas...</div>
+                        </div>
+
+                        <!-- Financeiro Tab -->
+                        <div id="financeiro-tab" class="tab-content">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-xl font-bold">Controle Financeiro</h3>
+                                <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
+                                    <i class="fas fa-plus mr-2"></i>Nova Transação
+                                </button>
+                            </div>
+                            <div id="financeiro-content">Carregando dados financeiros...</div>
+                        </div>
+
+                        <!-- Jogadores Tab -->
+                        <div id="jogadores-tab" class="tab-content">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-xl font-bold">Membros da Pelada</h3>
+                                <button class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg">
+                                    <i class="fas fa-user-plus mr-2"></i>Convidar Jogador
+                                </button>
+                            </div>
+                            <div id="jogadores-list">Carregando membros...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Nova Pelada -->
+    <div id="newPeladaModal" class="modal">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">Nova Pelada</h3>
+                <button id="closeNewPeladaModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="newPeladaForm" enctype="multipart/form-data">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Nome da Pelada</label>
+                    <input type="text" id="peladaNome" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Local</label>
+                    <input type="text" id="peladaLocal" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Descrição</label>
+                    <textarea id="peladaDescricao" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" rows="3"></textarea>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Foto da Pelada</label>
+                    <input type="file" id="peladaFoto" accept="image/*" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+                </div>
+                <div class="flex space-x-4">
+                    <button type="button" id="cancelNewPelada" class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 transition duration-200">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200">
+                        Criar Pelada
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
