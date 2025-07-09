@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - O Rei da Pelada</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f3f4f6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: #059669;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .crown {
+            color: #fbbf24;
+            margin-right: 0.5rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #10b981;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* Sistema de Abas */
+        .tabs-container {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .tabs {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 1rem 2rem;
+            text-align: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #6b7280;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab:hover {
+            color: #059669;
+            background: #f9fafb;
+        }
+
+        .tab.active {
+            color: #059669;
+            border-bottom-color: #059669;
+            background: #f0fdf4;
+        }
+
+        /* Conteúdo das Abas */
+        .tab-content {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Aba Perfil */
+        .profile-card {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border-radius: 1rem;
+            padding: 2rem;
+            color: white;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .profile-info h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-position {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-ranking {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #059669;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        /* Sub-abas do Perfil */
+        .sub-tabs {
+            display: flex;
+            background: white;
+            border-radius: 0.75rem;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .sub-tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #6b7280;
+            transition: all 0.3s ease;
+        }
+
+        .sub-tab:hover {
+            background: #f9fafb;
+        }
+
+        .sub-tab.active {
+            background: #059669;
+            color: white;
+        }
+
+        .sub-content {
+            display: none;
+            background: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .sub-content.active {
+            display: block;
+        }
+
+        /* Aba Minhas Peladas */
+        .peladas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .pelada-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .pelada-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .pelada-name {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .pelada-info {
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .pelada-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            color: #059669;
+            font-weight: 600;
+        }
+
+        .create-pelada-btn, .search-pelada-btn {
+            background: #059669;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+            transition: background 0.2s ease;
+        }
+
+        .create-pelada-btn:hover, .search-pelada-btn:hover {
+            background: #047857;
+        }
+
+        .search-pelada-btn {
+            background: #6b7280;
+        }
+
+        .search-pelada-btn:hover {
+            background: #4b5563;
+        }
+
+        /* Aba Ranking */
+        .ranking-list {
+            background: white;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            transition: background 0.2s ease;
+        }
+
+        .ranking-item:hover {
+            background: #f9fafb;
+        }
+
+        .ranking-item:last-child {
+            border-bottom: none;
+        }
+
+        .ranking-position {
+            font-weight: bold;
+            color: #059669;
+            width: 3rem;
+            text-align: center;
+            font-size: 1.25rem;
+        }
+
+        .ranking-position.top-3 {
+            color: #fbbf24;
+        }
+
+        .ranking-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 1rem;
+            color: #6b7280;
+        }
+
+        .ranking-info {
+            flex: 1;
+        }
+
+        .ranking-name {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .ranking-position-text {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .ranking-stats {
+            text-align: right;
+            color: #059669;
+            font-weight: 600;
+        }
+
+        .loading, .error {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        .error {
+            color: #dc2626;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        .empty-state p:first-child {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Estilos para modais */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #059669;
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #059669;
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-primary {
+            background: #059669;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #047857;
+        }
+
+        .btn-primary:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                padding: 0.75rem 1rem;
+            }
+
+            .profile-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .sub-tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <span class="crown">👑</span>
+            O Rei da Pelada
+        </div>
+        <div class="user-info">
+            <span id="welcomeMessage">Bem-vindo!</span>
+            <div id="userAvatar" class="user-avatar">U</div>
+        </div>
+    </div>
+
+    <!-- Sistema de Abas -->
+    <div class="tabs-container">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('perfil')">
+                👤 Perfil
+            </button>
+            <button class="tab" onclick="showTab('peladas')">
+                ⚽ Minhas Peladas
+            </button>
+            <button class="tab" onclick="showTab('ranking')">
+                🏆 Ranking Geral
+            </button>
+        </div>
+    </div>
+
+    <!-- Conteúdo da Aba Perfil -->
+    <div id="perfil" class="tab-content active">
+        <!-- Card do Perfil -->
+        <div class="profile-card">
+            <div id="profileAvatar" class="profile-avatar">U</div>
+            <div class="profile-info">
+                <h1 id="profileName">Nome do Usuário</h1>
+                <div id="profilePosition" class="profile-position">Posição</div>
+                <div id="profileRanking" class="profile-ranking">#0 no ranking geral</div>
+            </div>
+        </div>
+
+        <!-- Estatísticas Principais -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3 id="totalPartidas">0</h3>
+                <p>Partidas</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalPontos">0</h3>
+                <p>Pontos</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalGols">0</h3>
+                <p>Gols</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalAssistencias">0</h3>
+                <p>Assistências</p>
+            </div>
+        </div>
+
+        <!-- Sub-abas do Perfil -->
+        <div class="sub-tabs">
+            <button class="sub-tab active" onclick="showSubTab('estatisticas')">
+                📊 Estatísticas
+            </button>
+            <button class="sub-tab" onclick="showSubTab('historico')">
+                📜 Histórico
+            </button>
+            <button class="sub-tab" onclick="showSubTab('configuracoes')">
+                ⚙️ Configurações
+            </button>
+        </div>
+
+        <!-- Conteúdo das Sub-abas -->
+        <div id="estatisticas" class="sub-content active">
+            <h2 style="margin-bottom: 1.5rem; color: #1f2937;">📊 Estatísticas Detalhadas</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3 id="detailPartidas">0</h3>
+                    <p>Total de Partidas</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="detailPontuacao">0</h3>
+                    <p>Pontuação Total</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="detailGols">0</h3>
+                    <p>Gols Marcados</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="detailAssistencias">0</h3>
+                    <p>Assistências</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="melhorPartida">0 pts</h3>
+                    <p>Melhor Partida</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="piorPartida">0 pts</h3>
+                    <p>Pior Partida</p>
+                </div>
+            </div>
+            <div style="margin-top: 2rem;">
+                <h3 style="color: #1f2937; margin-bottom: 1rem;">Performance nas Últimas Partidas</h3>
+                <div style="background: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);">
+                    <p style="color: #6b7280;">Evolução da pontuação ao longo do tempo</p>
+                    <div id="performanceChart" style="margin-top: 1rem; color: #6b7280;">
+                        Gráfico de performance será implementado aqui
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="historico" class="sub-content">
+            <h2 style="margin-bottom: 1.5rem; color: #1f2937;">📜 Histórico de Partidas</h2>
+            <div id="historicoContent">
+                <div class="loading">Carregando histórico...</div>
+            </div>
+        </div>
+
+        <div id="configuracoes" class="sub-content">
+            <h2 style="margin-bottom: 1.5rem; color: #1f2937;">⚙️ Configurações da Conta</h2>
+            <div style="background: white; padding: 2rem; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);">
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="color: #1f2937; margin-bottom: 1rem;">Alterar Senha</h3>
+                    <form id="changePasswordForm">
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; color: #374151;">Senha Atual</label>
+                            <input type="password" id="currentPassword" style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem;">
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; color: #374151;">Nova Senha</label>
+                            <input type="password" id="newPassword" style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem;">
+                        </div>
+                        <button type="submit" style="background: #059669; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 0.5rem; cursor: pointer;">
+                            Alterar Senha
+                        </button>
+                    </form>
+                </div>
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="color: #1f2937; margin-bottom: 1rem;">Alterar Posição</h3>
+                    <form id="changePositionForm">
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; color: #374151;">Nova Posição</label>
+                            <select id="newPosition" style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem;">
+                                <option value="Goleiro">Goleiro</option>
+                                <option value="Zagueiro">Zagueiro</option>
+                                <option value="Meio-campo">Meio-campo</option>
+                                <option value="Atacante">Atacante</option>
+                            </select>
+                        </div>
+                        <button type="submit" style="background: #059669; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 0.5rem; cursor: pointer;">
+                            Alterar Posição
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conteúdo da Aba Minhas Peladas -->
+    <div id="peladas" class="tab-content">
+        <div style="margin-bottom: 2rem;">
+            <button class="create-pelada-btn" onclick="showCreatePeladaModal()">
+                ➕ Criar Nova Pelada
+            </button>
+            <button class="search-pelada-btn" onclick="showSearchPeladaModal()">
+                🔍 Buscar Pelada
+            </button>
+        </div>
+        
+        <div id="peladasContent">
+            <div class="loading">Carregando suas peladas...</div>
+        </div>
+    </div>
+
+    <!-- Conteúdo da Aba Ranking Geral -->
+    <div id="ranking" class="tab-content">
+        <h2 style="margin-bottom: 2rem; color: #1f2937;">🏆 Ranking Geral do Aplicativo</h2>
+        <div id="rankingContent">
+            <div class="loading">Carregando ranking...</div>
+        </div>
+    </div>
+
+    <script>
+        // Estado global da aplicação
+        let currentUser = null;
+        let currentTab = 'perfil';
+        let currentPelada = null;
+
+        // Verificar autenticação ao carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            verificarAutenticacao();
+        });
+
+        async function verificarAutenticacao() {
+            try {
+                const response = await fetch('/api/me', {
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const userData = await response.json();
+                    if (userData && userData.id) {
+                        currentUser = userData;
+                        carregarDadosUsuario();
+                        return;
+                    }
+                }
+                
+                // Se chegou aqui, não está autenticado - redirecionar apenas uma vez
+                console.log('Usuário não autenticado, redirecionando...');
+                window.location.href = '/';
+                
+            } catch (error) {
+                console.error('Erro ao verificar autenticação:', error);
+                // Não redirecionar automaticamente em caso de erro de rede
+                console.log('Erro de conexão - tentando continuar sem verificação');
+            }
+        }
+
+        // Nova função para carregar dados do usuário sem redirecionamento
+        function carregarDadosUsuario() {
+            if (currentUser) {
+                document.getElementById('welcomeMessage').textContent = `Bem-vindo, ${currentUser.nome || 'Usuário'}!`;
+                document.getElementById('userAvatar').textContent = (currentUser.nome || 'U').charAt(0).toUpperCase();
+                document.getElementById('profileName').textContent = currentUser.nome || 'Nome do Usuário';
+                document.getElementById('profileAvatar').textContent = (currentUser.nome || 'U').charAt(0).toUpperCase();
+                document.getElementById('profilePosition').textContent = currentUser.posicao || 'Posição não definida';
+                showTab('perfil');
+            }
+        }
+
+        // Sistema de abas
+        function showTab(tabName) {
+            currentTab = tabName;
+            
+            // Esconder todas as abas
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            // Remover classe active de todos os botões
+            document.querySelectorAll('.tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Mostrar aba selecionada
+            const selectedTab = document.getElementById(tabName + 'Tab');
+            const selectedButton = document.querySelector(`[onclick="showTab('${tabName}')"]`);
+            
+            if (selectedTab) {
+                selectedTab.style.display = 'block';
+            }
+            if (selectedButton) {
+                selectedButton.classList.add('active');
+            }
+            
+            // Carregar dados específicos da aba
+            switch(tabName) {
+                case 'perfil':
+                    carregarPerfilUsuario();
+                    break;
+                case 'peladas':
+                    carregarMinhasPeladas();
+                    break;
+                case 'ranking':
+                    carregarRankingGeral();
+                    break;
+            }
+        }
+
+        // Carregar perfil do usuário
+        async function carregarPerfilUsuario() {
+            if (!currentUser) return;
+            
+            try {
+                const response = await fetch('/api/me/estatisticas');
+                if (response.ok) {
+                    const stats = await response.json();
+                    
+                    document.getElementById('userPosition').textContent = currentUser.posicao || 'Não definida';
+                    document.getElementById('userRanking').textContent = `#${stats.ranking || 0} no ranking geral`;
+                    
+                    // Atualizar estatísticas
+                    document.getElementById('totalPartidas').textContent = stats.partidas || 0;
+                    document.getElementById('totalPontos').textContent = stats.pontos || 0;
+                    document.getElementById('totalGols').textContent = stats.gols || 0;
+                    document.getElementById('totalAssistencias').textContent = stats.assistencias || 0;
+                    
+                    document.getElementById('totalPartidasDetalhadas').textContent = stats.partidas || 0;
+                    document.getElementById('pontuacaoTotal').textContent = stats.pontos || 0;
+                    document.getElementById('golsDetalhados').textContent = stats.gols || 0;
+                    document.getElementById('assistenciasDetalhadas').textContent = stats.assistencias || 0;
+                }
+            } catch (error) {
+                console.error('Erro ao carregar estatísticas:', error);
+            }
+        }
+
+        // Carregar minhas peladas
+        async function carregarMinhasPeladas() {
+            try {
+                const response = await fetch('/api/minhas-peladas');
+                if (response.ok) {
+                    const data = await response.json();
+                    const container = document.getElementById('peladasContainer');
+                    
+                    if (data.peladas && data.peladas.length > 0) {
+                        container.innerHTML = data.peladas.map(pelada => `
+                            <div class="pelada-card" onclick="abrirPelada(${pelada.id})">
+                                <h3>${pelada.nome}</h3>
+                                <p class="pelada-location">📍 ${pelada.local}</p>
+                                <p class="pelada-members">👥 ${pelada.total_membros} membros</p>
+                                <div class="pelada-stats">
+                                    <span class="stat">⚽ ${pelada.total_partidas} partidas</span>
+                                    <span class="stat">💰 R$ ${pelada.saldo_financeiro.toFixed(2)}</span>
+                                </div>
+                            </div>
+                        `).join('');
+                    } else {
+                        container.innerHTML = '<p class="no-data">Você ainda não participa de nenhuma pelada.</p>';
+                    }
+                } else {
+                    throw new Error('Erro ao carregar peladas');
+                }
+            } catch (error) {
+                console.error('Erro ao carregar peladas:', error);
+                document.getElementById('peladasContainer').innerHTML = '<p class="error">Erro ao carregar peladas.</p>';
+            }
+        }
+
+        // Carregar ranking geral
+        async function carregarRankingGeral() {
+            try {
+                const response = await fetch('/api/ranking-geral');
+                if (response.ok) {
+                    const data = await response.json();
+                    const container = document.getElementById('rankingContainer');
+                    
+                    if (data.rankings && data.rankings.length > 0) {
+                        container.innerHTML = `
+                            <div class="ranking-table">
+                                <div class="ranking-header">
+                                    <span>Pos</span>
+                                    <span>Jogador</span>
+                                    <span>Partidas</span>
+                                    <span>Gols</span>
+                                    <span>Pontos</span>
+                                </div>
+                                ${data.rankings.map(jogador => `
+                                    <div class="ranking-row ${jogador.id === currentUser.id ? 'current-user' : ''}">
+                                        <span class="position">${jogador.posicao}</span>
+                                        <div class="player-info">
+                                            <div class="player-avatar">${jogador.nome.charAt(0).toUpperCase()}</div>
+                                            <div>
+                                                <div class="player-name">${jogador.nome}</div>
+                                                <div class="player-position">${jogador.posicao_campo || 'N/A'}</div>
+                                            </div>
+                                        </div>
+                                        <span>${jogador.partidas_jogadas}</span>
+                                        <span>${jogador.total_gols}</span>
+                                        <span class="points">${jogador.total_pontos}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    } else {
+                        container.innerHTML = '<p class="no-data">Nenhum jogador encontrado no ranking.</p>';
+                    }
+                } else {
+                    throw new Error('Erro ao carregar ranking');
+                }
+            } catch (error) {
+                console.error('Erro ao carregar ranking:', error);
+                document.getElementById('rankingContainer').innerHTML = '<p class="error">Erro de conexão. Verifique sua internet e tente novamente.</p>';
+            }
+        }
+
+        // Abrir pelada
+        function abrirPelada(peladaId) {
+            window.location.href = `/pelada.html?id=${peladaId}`;
+        }
+
+        // Modal de criar pelada
+        function abrirModalCriarPelada() {
+            document.getElementById('modalCriarPelada').style.display = 'flex';
+        }
+
+        function fecharModalCriarPelada() {
+            document.getElementById('modalCriarPelada').style.display = 'none';
+            document.getElementById('formCriarPelada').reset();
+        }
+
+        // Criar pelada
+        async function criarPelada() {
+            const form = document.getElementById('formCriarPelada');
+            const formData = new FormData(form);
+            
+            const nome = formData.get('nome');
+            const local = formData.get('local');
+            const descricao = formData.get('descricao');
+            
+            if (!nome || !local) {
+                alert('Nome e local são obrigatórios!');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/peladas', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        nome: nome,
+                        local: local,
+                        descricao: descricao
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Pelada criada com sucesso!');
+                    fecharModalCriarPelada();
+                    carregarMinhasPeladas();
+                } else {
+                    alert(result.message || 'Erro ao criar pelada');
+                }
+            } catch (error) {
+                console.error('Erro ao criar pelada:', error);
+                alert('Erro de conexão ao criar pelada');
+            }
+        }
+
+        // Modal de buscar peladas
+        function abrirModalBuscarPelada() {
+            document.getElementById('modalBuscarPelada').style.display = 'flex';
+            carregarPeladasDisponiveis();
+        }
+
+        function fecharModalBuscarPelada() {
+            document.getElementById('modalBuscarPelada').style.display = 'none';
+        }
+
+        // Carregar peladas disponíveis
+        async function carregarPeladasDisponiveis() {
+            try {
+                const response = await fetch('/api/peladas/buscar');
+                if (response.ok) {
+                    const data = await response.json();
+                    const container = document.getElementById('peladasDisponiveisContainer');
+                    
+                    if (data.peladas && data.peladas.length > 0) {
+                        container.innerHTML = data.peladas.map(pelada => `
+                            <div class="pelada-disponivel">
+                                <h4>${pelada.nome}</h4>
+                                <p>📍 ${pelada.local}</p>
+                                <p>👥 ${pelada.total_membros} membros</p>
+                                <p>👤 Criada por: ${pelada.criador_nome}</p>
+                                <button onclick="solicitarEntrada(${pelada.id})" class="btn-primary">
+                                    Solicitar Entrada
+                                </button>
+                            </div>
+                        `).join('');
+                    } else {
+                        container.innerHTML = '<p class="no-data">Nenhuma pelada disponível encontrada.</p>';
+                    }
+                } else {
+                    throw new Error('Erro ao carregar peladas');
+                }
+            } catch (error) {
+                console.error('Erro ao carregar peladas disponíveis:', error);
+                document.getElementById('peladasDisponiveisContainer').innerHTML = '<p class="error">Erro ao carregar peladas disponíveis.</p>';
+            }
+        }
+
+        // Solicitar entrada na pelada
+        async function solicitarEntrada(peladaId) {
+            try {
+                const response = await fetch(`/api/peladas/${peladaId}/solicitar-entrada`, {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Solicitação enviada com sucesso!');
+                    carregarPeladasDisponiveis();
+                } else {
+                    alert(result.message || 'Erro ao solicitar entrada');
+                }
+            } catch (error) {
+                console.error('Erro ao solicitar entrada:', error);
+                alert('Erro de conexão ao solicitar entrada');
+            }
+        }
+
+        // Fechar modais ao clicar fora
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // Logout
+        async function logout() {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Erro ao fazer logout:', error);
+                window.location.href = '/';
+            }
+        }
+    </script>
+
+    <!-- Modal Criar Pelada -->
+    <div id="modalCriarPelada" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">⚽ Criar Nova Pelada</h2>
+                <button class="modal-close" onclick="closeModal('modalCriarPelada')">&times;</button>
+            </div>
+            
+            <form id="formCriarPelada" onsubmit="submitCriarPelada(event)">
+                <div class="form-group">
+                    <label class="form-label" for="nomePelada">Nome da Pelada *</label>
+                    <input type="text" id="nomePelada" class="form-input" placeholder="Ex: Pelada do Sábado, Futebol da Galera..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="localPelada">Local *</label>
+                    <input type="text" id="localPelada" class="form-input" placeholder="Ex: Campo do Clube, Quadra da Escola..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="descricaoPelada">Descrição</label>
+                    <textarea id="descricaoPelada" class="form-textarea" placeholder="Descreva sua pelada, horários habituais, regras especiais..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="fotoPelada">Foto da Pelada</label>
+                    <input type="file" id="fotoPelada" class="form-input" accept="image/*">
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('modalCriarPelada')">Cancelar</button>
+                    <button type="submit" class="btn-primary">Criar Pelada</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
