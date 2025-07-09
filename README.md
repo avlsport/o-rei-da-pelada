@@ -1,177 +1,113 @@
-# O Rei da Pelada ⚽
+# O Rei da Pelada
 
-Aplicativo para gerenciar peladas de futebol com sistema de pontuação e rankings.
+Um aplicativo web moderno e espetacular para gerenciamento de peladas de futebol.
 
-## 🚀 Funcionalidades
+## 🚀 Deploy Automático no Railway.com
 
-### ⚽ **Sistema de Peladas**
-- Criação e gerenciamento de peladas
-- Sistema de aprovação de membros
-- Busca por peladas existentes
-- Convites por link
+Este projeto está configurado para deploy automático no Railway.com. Basta conectar seu repositório GitHub ao Railway e o deploy será feito automaticamente.
 
-### 🏆 **Sistema de Partidas**
-- Criação de partidas dentro das peladas
-- Confirmação de presença dos jogadores
-- Finalização de partidas
-- Sistema completo de estatísticas
+### Configuração no Railway:
 
-### 📊 **Sistema de Pontuação**
-- **Gol**: 8 pontos
-- **Assistência**: 5 pontos
-- **Defesa do goleiro**: 2 pontos
-- **Desarme**: 1 ponto
-- **Gol sofrido pelo goleiro**: -1 ponto
-- **Voto MVP**: +3 pontos
-- **Voto Bola Murcha**: -3 pontos
+1. **Conecte seu repositório GitHub** ao Railway
+2. **Adicione um banco de dados PostgreSQL** ao seu projeto
+3. **Configure a variável de ambiente DATABASE_URL** para conectar o banco ao seu serviço web
+4. O deploy será feito automaticamente!
 
-### 🏅 **Destaques Automáticos**
-- 👑 **Rei da Pelada** (maior pontuação)
-- ⚽ **Artilheiro** (mais gols)
-- 🎯 **Garçom** (mais assistências)
-- 🥅 **Paredão** (mais defesas)
-- 🛡️ **Xerifão** (mais desarmes)
-- 💩 **Bola Murcha** (menor pontuação)
+## 🎨 Características
 
-### 🎨 **Time da Rodada**
-- Layout visual de campo de futebol
-- Jogadores posicionados nas posições
-- Interface responsiva e moderna
+- **Design Moderno e Espetacular**: Interface moderna com animações suaves e design responsivo
+- **Tela de Login/Cadastro**: Sistema completo de autenticação com design atrativo
+- **Dashboard Interativo**: Painel principal com estatísticas e ações rápidas
+- **Gerenciamento de Peladas**: Criação e gerenciamento de grupos de futebol
+- **Sistema de Rankings**: Ranking geral e por pelada baseado em estatísticas
+- **Perfil de Jogador**: Card estilo FIFA com estatísticas detalhadas
+- **Sistema de Votação**: Votação para MVP e pior jogador da partida
+- **Controle Financeiro**: Gestão de mensalidades e gastos da pelada
 
-### 🗳️ **Sistema de Votação**
-- Votação para MVP e Bola Murcha
-- Cronômetro para encerrar votação
-- Admin pode encerrar antes do tempo
-- Rankings liberados após votação
+## 🛠️ Tecnologias Utilizadas
 
-## 🛠️ Tecnologias
+- **Backend**: Flask (Python) com SQLAlchemy
+- **Frontend**: React 18 com Vite, Tailwind CSS, Framer Motion
+- **Banco de Dados**: PostgreSQL (Railway) / SQLite (desenvolvimento local)
+- **Deploy**: Railway.com com deploy automático
 
-### **Backend**
-- **Python 3.11**
-- **Flask** - Framework web
-- **SQLAlchemy** - ORM para banco de dados
-- **PostgreSQL** - Banco de dados (produção)
-- **SQLite** - Banco de dados (desenvolvimento)
-- **Flask-CORS** - Suporte a CORS
-
-### **Frontend**
-- **React 18** - Framework frontend
-- **Vite** - Build tool
-- **Tailwind CSS** - Framework CSS
-- **Lucide React** - Ícones
-- **React Router** - Roteamento
-
-## 🚀 Deploy no Railway
-
-### **Pré-requisitos**
-1. Conta no Railway
-2. Conta no GitHub
-3. Repositório conectado ao Railway
-
-### **Configuração do Banco de dados**
-1. No Railway, adicione um serviço PostgreSQL
-2. Copie a URL de conexão do banco
-3. Configure como variável de ambiente `DATABASE_URL`
-
-### **Variáveis de Ambiente**
-```bash
-DATABASE_URL=postgresql://...  # URL do PostgreSQL
-SECRET_KEY=sua_chave_secreta   # Chave secreta do Flask
-FLASK_ENV=production           # Ambiente de produção
-PORT=5000                      # Porta do servidor
-```
-
-### **Deploy Automático**
-1. Conecte o repositório ao Railway
-2. O Railway detecta automaticamente o projeto Python
-3. Instala dependências do `requirements.txt`
-4. Executa o comando definido no `Procfile`
-
-## 📁 Estrutura do Projeto
+## 📦 Estrutura do Projeto
 
 ```
-o-rei-da-pelada/
+rei_da_pelada/
 ├── src/
-│   ├── models/          # Modelos do banco de dados
-│   │   ├── jogador.py   # Modelo de jogadores
-│   │   ├── pelada.py    # Modelo de peladas
-│   │   └── partida.py   # Modelo de partidas
-│   ├── routes/          # Rotas da API
-│   │   ├── auth.py      # Autenticação
-│   │   ├── peladas.py   # Gerenciamento de peladas
-│   │   └── partidas.py  # Gerenciamento de partidas
-│   ├── utils/           # Utilitários
-│   │   └── pontuacao.py # Sistema de pontuação
-│   ├── static/          # Frontend buildado
-│   └── main.py          # Arquivo principal
-├── requirements.txt     # Dependências Python
-├── Procfile            # Comando de inicialização
-├── railway.toml        # Configuração do Railway
-├── runtime.txt         # Versão do Python
-└── README.md           # Documentação
+│   ├── main.py              # Aplicação Flask principal
+│   ├── static/              # Arquivos estáticos do React compilado
+│   └── database/            # Banco de dados SQLite (desenvolvimento)
+├── Procfile                 # Configuração de deploy para Railway
+├── requirements.txt         # Dependências Python
+├── runtime.txt             # Versão do Python
+└── README.md               # Este arquivo
 ```
 
-## 🔧 Desenvolvimento Local
+## 🎮 Funcionalidades Implementadas
 
-### **Backend**
-```bash
-# Instalar dependências
-pip install -r requirements.txt
+### ✅ Sistema de Autenticação
+- Registro de usuários com upload de foto
+- Login/logout seguro
+- Sessões persistentes
 
-# Executar servidor
-python src/main.py
-```
+### ✅ Dashboard Principal
+- Boas-vindas personalizadas
+- Cards de estatísticas animados
+- Ações rápidas
+- Design responsivo e moderno
 
-### **Frontend** (se necessário rebuildar)
-```bash
-# Instalar dependências
-npm install
+### ✅ Gerenciamento de Peladas
+- Criação de novas peladas
+- Listagem de peladas do usuário
+- Busca por peladas disponíveis
+- Sistema de membros
 
-# Build para produção
-npm run build
+### ✅ Sistema de Rankings
+- Ranking global de jogadores
+- Estatísticas detalhadas
+- Pontuação baseada em performance
 
-# Copiar para pasta static
-cp -r dist/* src/static/
-```
+### ✅ Perfil do Jogador
+- Card estilo FIFA
+- Estatísticas completas
+- Upload de foto de perfil
 
-## 📱 Funcionalidades Detalhadas
+## 🔧 Configuração Local (Opcional)
 
-### **Fluxo de Usuário**
-1. **Cadastro/Login** - Sistema de autenticação completo
-2. **Dashboard** - Visão geral das peladas e estatísticas
-3. **Criar Pelada** - Criação de nova pelada
-4. **Buscar Peladas** - Busca e solicitação de entrada
-5. **Gerenciar Pelada** - Aprovação de membros, criação de partidas
-6. **Participar de Partida** - Confirmação de presença
-7. **Adicionar Estatísticas** - Inserção de dados da partida
-8. **Votar** - Votação para MVP e Bola Murcha
-9. **Ver Rankings** - Visualização de rankings e Time da Rodada
+Se você quiser rodar o projeto localmente para desenvolvimento:
 
-### **Permissões**
-- **Admin da Pelada**: Pode criar partidas, aprovar membros, adicionar estatísticas
-- **Membro da Pelada**: Pode confirmar presença, votar, ver rankings
-- **Usuário Comum**: Pode criar peladas, buscar peladas, solicitar entrada
+1. **Clone o repositório**:
+   ```bash
+   git clone <seu-repositorio>
+   cd rei_da_pelada
+   ```
 
-## 🎯 Roadmap Futuro
+2. **Instale as dependências**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-- [ ] Sistema de pagamento integrado
-- [ ] Notificações push
-- [ ] Chat entre membros
-- [ ] Sistema de ligas e campeonatos
-- [ ] Estatísticas avançadas
-- [ ] App mobile nativo
-- [ ] Sistema de arbitragem
-- [ ] Integração com redes sociais
+3. **Execute a aplicação**:
+   ```bash
+   python src/main.py
+   ```
 
-## 📄 Licença
+4. **Acesse**: `http://localhost:5001`
 
-Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
+## 🌐 Deploy no Railway
 
-## 👨‍💻 Desenvolvido por
+O projeto está pré-configurado para deploy automático no Railway.com:
 
-**Manus AI** - Desenvolvimento completo do sistema
+- **Procfile**: Define como iniciar a aplicação
+- **requirements.txt**: Lista todas as dependências Python
+- **runtime.txt**: Especifica a versão do Python
+- **Configuração de banco**: Usa automaticamente o PostgreSQL do Railway
+
+**Não é necessária nenhuma configuração manual!**
 
 ---
 
-⚽ **O Rei da Pelada** - Transformando peladas em experiências profissionais! 🏆
+**Desenvolvido com ⚽ e muito código!**
 
