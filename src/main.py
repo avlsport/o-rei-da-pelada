@@ -19,13 +19,18 @@ app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'sta
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'asdf#FGSgvasgf$5$WGT')
 
 # Configurações de sessão para produção
-app.config['SESSION_COOKIE_SECURE'] = os.environ.get('FLASK_ENV') == 'production'
-app.config['SESSION_COOKIE_HTTPONLY'] = True
-app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_SECURE'] = False  # Permite HTTP
+app.config['SESSION_COOKIE_HTTPONLY'] = False  # Permite JavaScript acessar
+app.config['SESSION_COOKIE_SAMESITE'] = None  # Permite CORS
+app.config['SESSION_COOKIE_DOMAIN'] = None  # Permite qualquer domínio
 app.config['PERMANENT_SESSION_LIFETIME'] = 86400  # 24 horas
 
-# Habilitar CORS para todas as rotas
-CORS(app, supports_credentials=True, origins=['*'])
+# Habilitar CORS para todas as rotas com configurações específicas
+CORS(app, 
+     supports_credentials=True, 
+     origins=['*'],
+     allow_headers=['Content-Type', 'Authorization'],
+     methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 
 # Registrar blueprints
 app.register_blueprint(auth_bp, url_prefix='/api')

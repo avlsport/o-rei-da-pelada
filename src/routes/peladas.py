@@ -10,9 +10,20 @@ peladas_bp = Blueprint("peladas", __name__)
 def require_auth():
     """Verifica se o usuário está autenticado"""
     jogador_id = session.get("jogador_id")
+    print(f"DEBUG: Session keys: {list(session.keys())}")  # Debug
+    print(f"DEBUG: Full session: {dict(session)}")  # Debug
+    print(f"DEBUG: jogador_id from session: {jogador_id}")  # Debug
+    
     if not jogador_id:
+        print("DEBUG: No jogador_id in session")  # Debug
+        # Tentar buscar de outra forma
+        for key in session.keys():
+            print(f"DEBUG: Session key '{key}': {session[key]}")
         return None
-    return Jogador.query.get(jogador_id)
+    
+    jogador = Jogador.query.get(jogador_id)
+    print(f"DEBUG: Found jogador: {jogador}")  # Debug
+    return jogador
 
 def is_admin_pelada(jogador_id, pelada_id):
     """Verifica se o jogador é admin da pelada"""
@@ -28,11 +39,35 @@ def is_membro_pelada(jogador_id, pelada_id):
 def criar_pelada():
     """Endpoint para criar uma nova pelada"""
     try:
+        print("DEBUG: Iniciando criação de pelada")  # Debug
+        print(f"DEBUG: Request headers: {dict(request.headers)}")  # Debug
+        print(f"DEBUG: Request content_type: {request.content_type}")  # Debug
+        
         jogador = require_auth()
         if not jogador:
+            print("DEBUG: Falha na autenticação")  # Debug
             return jsonify({"error": "Não autenticado"}), 401
         
-        data = request.get_json()
+        print(f"DEBUG: Jogador autenticado: {jogador.nome}")  # Debug
+        
+        # Verificar se é JSON ou FormData
+        if request.content_type and 'application/json' in request.content_type:
+            # Dados JSON (sem foto)
+            data = request.get_json()
+            foto_url = data.get("foto_url")
+        else:
+            # Dados FormData (com possível foto)
+            data = request.form.to_dict()
+            foto = request.files.get("foto")
+            foto_url = None
+            
+            # Processar upload da foto se existir
+            if foto and foto.filename:
+                import os
+                filename = f"{os.urandom(16).hex()}_{foto.filename}"
+                foto_path = os.path.join(os.getcwd(), "src", "uploads", filename)
+                foto.save(foto_path)
+                foto_url = f"/uploads/{filename}"
         
         if not data or not data.get("nome"):
             return jsonify({"error": "Nome da pelada é obrigatório"}), 400
@@ -41,7 +76,8 @@ def criar_pelada():
         pelada = Pelada(
             nome=data["nome"],
             descricao=data.get("descricao", ""),
-            foto_url=data.get("foto_url"),  # NOVO CAMPO para foto da pelada
+            local=data.get("local", ""),  # Campo local adicionado
+            foto_url=foto_url,  # URL da foto da pelada
             id_criador=jogador.id
         )
         
@@ -69,7 +105,7 @@ def criar_pelada():
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
-@peladas_bp.route("/peladas", methods=["GET"])
+@peladas_bp.route("/peladas/minhas", methods=["GET"])
 def listar_peladas():
     """Endpoint para listar peladas que o jogador faz parte"""
     try:

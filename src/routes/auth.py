@@ -40,12 +40,15 @@ def register():
         db.session.commit()
 
         return jsonify({
+            "success": True,
             "message": "Usuário registrado com sucesso",
-            "id": novo_jogador.id,
-            "nome": novo_jogador.nome,
-            "email": novo_jogador.email,
-            "posicao": novo_jogador.posicao,
-            "foto_url": novo_jogador.foto_url
+            "user": {
+                "id": novo_jogador.id,
+                "nome": novo_jogador.nome,
+                "email": novo_jogador.email,
+                "posicao": novo_jogador.posicao,
+                "foto_url": novo_jogador.foto_url
+            }
         }), 201
 
     except Exception as e:
@@ -55,27 +58,46 @@ def register():
 @auth_bp.route("/auth/login", methods=["POST"])
 def login():
     try:
+        print("DEBUG LOGIN: Iniciando login")  # Debug
         data = request.get_json()
         email = data.get("email")
         senha = data.get("senha")
+        
+        print(f"DEBUG LOGIN: Email: {email}")  # Debug
 
         jogador = Jogador.query.filter_by(email=email).first()
 
         if not jogador or not jogador.check_senha(senha):
+            print("DEBUG LOGIN: Credenciais inválidas")  # Debug
             return jsonify({"error": "Email ou senha inválidos"}), 401
 
+        print(f"DEBUG LOGIN: Jogador encontrado: {jogador.nome}")  # Debug
+        
+        # Limpar sessão anterior
+        session.clear()
+        
+        # Criar nova sessão
         session["jogador_id"] = jogador.id
-        session.permanent = True # Torna a sessão permanente
+        session.permanent = True
+        session.modified = True  # Força salvamento da sessão
+        
+        print(f"DEBUG LOGIN: Session após login: {dict(session)}")  # Debug
+        print(f"DEBUG LOGIN: jogador_id salvo: {session.get('jogador_id')}")  # Debug
 
         return jsonify({
-            "id": jogador.id,
-            "nome": jogador.nome,
-            "email": jogador.email,
-            "posicao": jogador.posicao,
-            "foto_url": jogador.foto_url
+            "success": True,
+            "message": "Login realizado com sucesso",
+            "user": {
+                "id": jogador.id,
+                "nome": jogador.nome,
+                "email": jogador.email,
+                "posicao": jogador.posicao,
+                "foto_url": jogador.foto_url
+            }
         }), 200
 
     except Exception as e:
+        print(f"DEBUG LOGIN: Erro: {str(e)}")  # Debug
         return jsonify({"error": str(e)}), 500
 
 @auth_bp.route("/auth/logout", methods=["POST"])
